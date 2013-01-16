@@ -35,6 +35,9 @@
 		var count = 0;
 
 		$(document).ready(function(){
+			
+			/* scaffold */
+
 			$("#scaffold_name").keyup(function(){
 				scaffold_output();
 			});
@@ -53,8 +56,39 @@
 				scaffold_output();
 			});
 
-			// 初期表示時の最初のフィールドを生成します。
+			// scaffoldの初期表示時の最初のフィールドを生成します。
 			scaffold_field_clone();
+
+			/* migration */
+
+			$("#migration_column").keyup(function(){
+				migration_output();
+			});
+
+			$("#migration_model").keyup(function(){
+				migration_output();
+			});
+
+			$(document).on("keyup", ".migration_fieldname", function(event){
+				migration_output();
+			});
+
+			$(document).on("change", ".migration_fieldname_type", function(event){
+				migration_output();
+			});
+
+			$("#migration_add").click(function(){
+				migration_field_clone();
+			});
+
+			$(document).on("click", ".migration_remove", function(event){
+				var targetColumn = $(this).parent();
+				targetColumn.remove();
+				migration_output();
+			});
+
+			// migrationの〜
+			migration_field_clone();
 		});
 
 		function scaffold_field_clone(){
@@ -63,6 +97,14 @@
             cloned.attr("id", "scaffold_field_" + count++)
             cloned.css("visibility", "visible");
 			$("#scaffold_fields").append(cloned);
+		}
+
+		function migration_field_clone(){
+			var original = $("#migration_field");
+            var cloned = $(original).clone();
+            cloned.attr("id", "migration_field_" + count++)
+            cloned.css("visibility", "visible");
+			$("#migration_fields").append(cloned);
 		}
 
 		function scaffold_output(){
@@ -76,12 +118,31 @@
 			$("#output").html(command);
 		}
 
+		function migration_output(){
+			command = "rails generate migration ";
+			var column = $("#migration_column").val();
+			var model = $("#migration_model").val();
+			command += "Add" + ucfirst(column) + "To" + ucfirst(model);
+			var fieldes = $(".migration_fieldname")
+			var types =  $(".migration_fieldname_type")
+			for(var i = 0; i<fieldes.length-1; i++) {
+				command += " " + fieldes[i].value + ":" + types[i].value;
+			}
+			$("#output").html(command);
+		}
+
 		$.clipboardReady(function(){
 			$("command_copy").click(function(){
 				var text = $("#output").val();
 		    	$.clipboard( text );
 			});
 		});
+
+		function ucfirst(text){
+			var uppperCase = text.charAt(0).toUpperCase() + text.slice(1);
+			return uppperCase;
+		}
+
 	</script>
 </head>
 <body>
@@ -94,14 +155,15 @@
 	<h2>Types</h2>
 	<div class="tabbable">
 		<ul class="nav nav-tabs">
-			<li class="active"><a href="#tab1" data-toggle="tab">scaffold</a></li>
-		    <li><a href="#tab2" data-toggle="tab">migration</a></li>
+			<li><a href="#tab1" data-toggle="tab">scaffold</a></li>
+		    <li class="active"><a href="#tab2" data-toggle="tab">migration</a></li>
 		    <li><a href="#tab3" data-toggle="tab">controller</a></li>
 		    <li><a href="#tab4" data-toggle="tab">model</a></li>
 		</ul>
 
 		<div class="tab-content">
-		  	<div class="tab-pane active" id="tab1">
+
+		  	<div class="tab-pane" id="tab1">
 		     	
 	     		<div class="row">
 					<div class="span3">
@@ -118,6 +180,7 @@
 
 				<div class="row">
 					<div class="span3">
+						<!--余白-->
 					</div>
 					<div class="span9">
 						<button id="scaffold_add" class="btn btn-inverse" type="button"><i class="icon-plus icon-white"></i> add field</button>
@@ -125,15 +188,49 @@
 				</div>
 		      	
 		    </div>
-		    <div class="tab-pane" id="tab2">
-		      <h3>migration</h3>
+
+		    <div class="tab-pane active" id="tab2">
+
+	     		<div class="row">
+					<div class="span3">
+						<div class="input-prepend">
+							<span class="add-on">カラム名</span>
+							<input class="span2" id="migration_column" type="text" placeholder="name">
+						</div>
+					</div>
+
+					<div class="span3">
+						<div class="input-prepend">
+							<span class="add-on">モデル名</span>
+							<input class="span2" id="migration_model" type="text" placeholder="name">
+						</div>
+					</div>
+				</div>
+
+				<div class="row">
+
+					<div id="migration_fields" class="span6">
+						<!---->
+					</div>
+
+				</div>
+
+				<div class="row">
+					<div class="span6">
+						<button id="migration_add" class="btn btn-inverse" type="button"><i class="icon-plus icon-white"></i> add field</button>
+					</div>
+				</div>
+		      	
 		    </div>
+
 		    <div class="tab-pane" id="tab3">
 		      <h3>controller</h3>
 		    </div>
+		    
 		    <div class="tab-pane" id="tab4">
 		      <h3>model</h3>
 		    </div>
+
 		  </div>
 		</div>
 
@@ -162,6 +259,25 @@
 			<option value="boolean">boolean - True or False</option>
 		</select>
 		<button class="scaffold_remove btn btn-warning" type="button"><i class="icon-remove icon-white"></i> remove</button>
+	</div>
+
+	<div id="migration_field" class="input-prepend" style="visibility:collapse;">
+		<span class="add-on">フィールド名</span>
+		<input class="migration_fieldname span2" type="text" placeholder="field">
+		<select class="migration_fieldname_type" style="margin:0 15px;">
+			<option value="string">string - 文字列</option>
+			<option value="text">text - 長い文字列</option>
+			<option value="integer">integer - 整数</option>
+			<option value="float">float - 浮動小数</option>
+			<option value="decimal">decimal - 精度の高い小数</option>
+			<option value="date">date - 日付</option>
+			<option value="datetime">datetime - 日時</option>
+			<option value="time">time - 時間</option>
+			<option value="timestamp">timestamp - より細かい日時</option>
+			<option value="binary">binary - バイナリデータ</option>
+			<option value="boolean">boolean - True or False</option>
+		</select>
+		<button class="migration_remove btn btn-warning" type="button"><i class="icon-remove icon-white"></i> remove</button>
 	</div>
 
 </body>
