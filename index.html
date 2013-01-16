@@ -1,0 +1,162 @@
+
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ja" lang="ja" dir="ltr">
+<head profile="http://purl.org/net/ns/metaprof">
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<title>Generate Rails Command</title>
+	<meta name="robots" content="INDEX,FOLLOW" />
+	<meta name="keywords" content="XXX" lang="ja" xml:lang="ja" />
+	<meta name="description" content="XXX" lang="ja" xml:lang="ja" />
+	<meta http-equiv="content-style-type" content="text/css" />
+	<meta http-equiv="content-script-type" content="text/javascript" />
+	<meta http-equiv="content-language" content="ja" />
+	<link rev="made" href="mailto:XXX@XXX.com" />
+	<meta name="author" content="author" />
+	<link rel="start" type="text/html" href="/index.html" />
+	<meta name="copyright" content="XXX" />
+	<base href="./">
+	<!--css-->
+	<link href="bootstrap/assets/css/bootstrap.min.css" rel="stylesheet" media="screen">
+	<style type="text/css">
+		h1 {
+			margin-top: 35px;
+		}
+		h2 {
+			margin-top: 35px;
+		}
+	</style>
+	<!--js-->
+	<script type="text/javascript" src="js/jquery-1.8.3.min.js"></script>
+	<script type="text/javascript" src="js/jquery.clipboard.min.js"></script>
+	<script type="text/javascript" src="bootstrap/assets/js/bootstrap.min.js"></script>
+	<script type="text/javascript">
+
+		var count = 0;
+
+		$(document).ready(function(){
+			$("#scaffold_name").keyup(function(){
+				scaffold_output();
+			});
+			$(document).on("keyup", ".scaffold_fieldname", function(event){
+				scaffold_output();
+			});
+			$(document).on("change", ".scaffold_fieldname_type", function(event){
+				scaffold_output();
+			});
+			$("#scaffold_add").click(function(){
+				scaffold_clone();
+			});
+
+			scaffold_clone();
+		});
+
+		function scaffold_clone(){
+			var original = $("#scaffold_field:last");
+            var cloned = $(original).clone();
+            cloned.attr("id", "scaffold_field_" + count++)
+            cloned.css("visibility", "visible");
+			$("#scaffold_fields").append(cloned);
+		}
+
+		function scaffold_output(){
+			command = "rails generate scaffold ";
+			command += $("#scaffold_name").val();
+			var fieldes = $(".scaffold_fieldname")
+			var types =  $(".scaffold_fieldname_type")
+			for(var i = 0; i<fieldes.length-1; i++) {
+				command += " " + fieldes[i].value + ":" + types[i].value;
+			}
+			$("#output").html(command);
+		}
+
+		$.clipboardReady(function(){
+			$("command_copy").click(function(){
+				var text = $("#output").val();
+		    	$.clipboard( text );
+			});
+		});
+	</script>
+</head>
+<body>
+
+<div class="container">
+
+	<h1>Generate Rails Command</h1>
+	<p>this page generate rails command option that make scaffold and migration, controller, model.</p>
+
+	<h2>Types</h2>
+	<div class="tabbable">
+		<ul class="nav nav-tabs">
+			<li class="active"><a href="#tab1" data-toggle="tab">scaffold</a></li>
+		    <li><a href="#tab2" data-toggle="tab">migration</a></li>
+		    <li><a href="#tab3" data-toggle="tab">controller</a></li>
+		    <li><a href="#tab4" data-toggle="tab">model</a></li>
+		</ul>
+
+		<div class="tab-content">
+		  	<div class="tab-pane active" id="tab1">
+		     	
+	     		<div class="row">
+					<div class="span3">
+						<div class="input-prepend">
+							<span class="add-on">モデル名</span>
+							<input class="span2" id="scaffold_name" type="text" placeholder="name">
+						</div>
+					</div>
+
+					<div id="scaffold_fields" class="span9">
+						<!---->
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="span3">
+					</div>
+					<div class="span9">
+						<button id="scaffold_add" class="btn btn-inverse" type="button"><i class="icon-plus icon-white"></i> add field</button>
+					</div>
+				</div>
+		      	
+		    </div>
+		    <div class="tab-pane" id="tab2">
+		      <h3>migration</h3>
+		    </div>
+		    <div class="tab-pane" id="tab3">
+		      <h3>controller</h3>
+		    </div>
+		    <div class="tab-pane" id="tab4">
+		      <h3>model</h3>
+		    </div>
+		  </div>
+		</div>
+
+		<h2>Output</h2>
+		<div class="controls">
+			<textarea id="output" class="input-xxlarge" rows="10"></textarea>
+		</div>
+		<input type="button" name="copy" value="Copy" class="btn btn-large" id="command_copy"/>
+
+	</div>
+
+	<div id="scaffold_field" class="input-prepend" style="visibility:collapse;">
+		<span class="add-on">フィールド名</span>
+		<input class="scaffold_fieldname span2" type="text" placeholder="field">
+		<select class="scaffold_fieldname_type" style="margin:0 15px;">
+			<option value="string">string - 文字列</option>
+			<option value="text">text - 長い文字列</option>
+			<option value="integer">integer - 整数</option>
+			<option value="float">float - 浮動小数</option>
+			<option value="decimal">decimal - 精度の高い小数</option>
+			<option value="date">date - 日付</option>
+			<option value="datetime">datetime - 日時</option>
+			<option value="time">time - 時間</option>
+			<option value="timestamp">timestamp - より細かい日時</option>
+			<option value="binary">binary - バイナリデータ</option>
+			<option value="boolean">boolean - True or False</option>
+		</select>
+		<button id="scaffold_add" class="btn btn-warning" type="button"><i class="icon-remove icon-white"></i> remove</button>
+	</div>
+
+</body>
+</html>
