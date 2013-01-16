@@ -45,14 +45,20 @@
 				scaffold_output();
 			});
 			$("#scaffold_add").click(function(){
-				scaffold_clone();
+				scaffold_field_clone();
+			});
+			$(document).on("click", ".scaffold_remove", function(event){
+				var targetColumn = $(this).parent();
+				targetColumn.remove();
+				scaffold_output();
 			});
 
-			scaffold_clone();
+			// 初期表示時の最初のフィールドを生成します。
+			scaffold_field_clone();
 		});
 
-		function scaffold_clone(){
-			var original = $("#scaffold_field:last");
+		function scaffold_field_clone(){
+			var original = $("#scaffold_field");
             var cloned = $(original).clone();
             cloned.attr("id", "scaffold_field_" + count++)
             cloned.css("visibility", "visible");
@@ -155,7 +161,7 @@
 			<option value="binary">binary - バイナリデータ</option>
 			<option value="boolean">boolean - True or False</option>
 		</select>
-		<button id="scaffold_add" class="btn btn-warning" type="button"><i class="icon-remove icon-white"></i> remove</button>
+		<button class="scaffold_remove btn btn-warning" type="button"><i class="icon-remove icon-white"></i> remove</button>
 	</div>
 
 </body>
