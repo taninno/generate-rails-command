@@ -7,7 +7,7 @@
 	<title>Generate Rails Command</title>
 	<meta name="robots" content="INDEX,FOLLOW" />
 	<meta name="keywords" content="XXX" lang="ja" xml:lang="ja" />
-	<meta name="description" content="XXX" lang="ja" xml:lang="ja" />
+	<meta name="description" content="this page generate rails command option that make scaffold and migration, controller, model." lang="ja" xml:lang="ja" />
 	<meta http-equiv="content-style-type" content="text/css" />
 	<meta http-equiv="content-script-type" content="text/javascript" />
 	<meta http-equiv="content-language" content="ja" />
@@ -89,6 +89,29 @@
 
 			// migrationの〜
 			migration_field_clone();
+
+			/* controller */
+
+			$("#controller_name").keyup(function(){
+				controller_output();
+			});
+
+			$(document).on("keyup", ".controller_fieldname", function(event){
+				controller_output();
+			});
+
+			$("#controller_add").click(function(){
+				controller_field_clone();
+			});
+
+			$(document).on("click", ".controller_remove", function(event){
+				var targetColumn = $(this).parent();
+				targetColumn.remove();
+				controller_output();
+			});
+
+			// controllerの〜
+			controller_field_clone();
 		});
 
 		function scaffold_field_clone(){
@@ -105,6 +128,14 @@
             cloned.attr("id", "migration_field_" + count++)
             cloned.css("visibility", "visible");
 			$("#migration_fields").append(cloned);
+		}
+
+		function controller_field_clone(){
+			var original = $("#controller_field");
+            var cloned = $(original).clone();
+            cloned.attr("id", "controller_field_" + count++)
+            cloned.css("visibility", "visible");
+			$("#controller_fields").append(cloned);
 		}
 
 		function scaffold_output(){
@@ -127,6 +158,16 @@
 			var types =  $(".migration_fieldname_type")
 			for(var i = 0; i<fieldes.length-1; i++) {
 				command += " " + fieldes[i].value + ":" + types[i].value;
+			}
+			$("#output").html(command);
+		}
+
+		function controller_output(){
+			command = "rails generate controller ";
+			command += $("#controller_name").val();
+			var actions = $(".controller_fieldname")
+			for(var i = 0; i<actions.length-1; i++) {
+				command += " " + actions[i].value;
 			}
 			$("#output").html(command);
 		}
@@ -156,8 +197,8 @@
 	<div class="tabbable">
 		<ul class="nav nav-tabs">
 			<li><a href="#tab1" data-toggle="tab">scaffold</a></li>
-		    <li class="active"><a href="#tab2" data-toggle="tab">migration</a></li>
-		    <li><a href="#tab3" data-toggle="tab">controller</a></li>
+		    <li><a href="#tab2" data-toggle="tab">migration</a></li>
+		    <li class="active"><a href="#tab3" data-toggle="tab">controller</a></li>
 		    <li><a href="#tab4" data-toggle="tab">model</a></li>
 		</ul>
 
@@ -189,7 +230,7 @@
 		      	
 		    </div>
 
-		    <div class="tab-pane active" id="tab2">
+		    <div class="tab-pane" id="tab2">
 
 	     		<div class="row">
 					<div class="span3">
@@ -223,8 +264,34 @@
 		      	
 		    </div>
 
-		    <div class="tab-pane" id="tab3">
-		      <h3>controller</h3>
+		    <div class="tab-pane active" id="tab3">
+
+	     		<div class="row">
+					<div class="span4">
+						<div class="input-prepend">
+							<span class="add-on">コントローラー名</span>
+							<input class="span2" id="controller_name" type="text" placeholder="name">
+						</div>
+					</div>
+
+					<div id="controller_fields" class="span8">
+						<!---->
+					</div>
+
+				</div>
+
+				<div class="row">
+
+					<div class="span4">
+						<!--余白-->
+					</div>
+
+					<div class="span8">
+						<button id="controller_add" class="btn btn-inverse" type="button"><i class="icon-plus icon-white"></i> add action</button>
+					</div>
+
+				</div>
+
 		    </div>
 		    
 		    <div class="tab-pane" id="tab4">
@@ -278,6 +345,12 @@
 			<option value="boolean">boolean - True or False</option>
 		</select>
 		<button class="migration_remove btn btn-warning" type="button"><i class="icon-remove icon-white"></i> remove</button>
+	</div>
+
+	<div id="controller_field" class="input-prepend" style="visibility:collapse;">
+		<span class="add-on">アクション名</span>
+		<input class="controller_fieldname span2" type="text" placeholder="action" style="margin-right:15px;">
+		<button class="controller_remove btn btn-warning" type="button"><i class="icon-remove icon-white"></i> remove</button>
 	</div>
 
 </body>
