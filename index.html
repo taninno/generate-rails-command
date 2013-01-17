@@ -210,7 +210,7 @@
 					<div class="span3">
 						<div class="input-prepend">
 							<span class="add-on">モデル名</span>
-							<input class="span2" id="scaffold_name" type="text" placeholder="name">
+							<input class="span2" id="scaffold_name" type="text" placeholder="scaffold_name">
 						</div>
 					</div>
 
@@ -230,33 +230,29 @@
 		      	
 		    </div>
 
-		    <div class="tab-pane" id="tab2">
+		    <div class="tab-pane active" id="tab2">
 
 	     		<div class="row">
-					<div class="span3">
+					<div class="span5 form-inline">
 						<div class="input-prepend">
 							<span class="add-on">カラム名</span>
-							<input class="span2" id="migration_column" type="text" placeholder="name">
+							<input class="input-small" id="migration_column" type="text" placeholder="column">
 						</div>
-					</div>
-
-					<div class="span3">
 						<div class="input-prepend">
 							<span class="add-on">モデル名</span>
-							<input class="span2" id="migration_model" type="text" placeholder="name">
+							<input class="input-small" id="migration_model" type="text" placeholder="model">
 						</div>
 					</div>
-				</div>
 
-				<div class="row">
-
-					<div id="migration_fields" class="span6">
+					<div id="migration_fields" class="span7">
 						<!---->
 					</div>
-
 				</div>
 
 				<div class="row">
+					<div class="span5">
+						<!--余白-->
+					</div>
 					<div class="span6">
 						<button id="migration_add" class="btn btn-inverse" type="button"><i class="icon-plus icon-white"></i> add field</button>
 					</div>
@@ -264,13 +260,13 @@
 		      	
 		    </div>
 
-		    <div class="tab-pane active" id="tab3">
+		    <div class="tab-pane" id="tab3">
 
 	     		<div class="row">
 					<div class="span4">
 						<div class="input-prepend">
 							<span class="add-on">コントローラー名</span>
-							<input class="span2" id="controller_name" type="text" placeholder="name">
+							<input class="span2" id="controller_name" type="text" placeholder="controller_name">
 						</div>
 					</div>
 
@@ -311,8 +307,8 @@
 
 	<div id="scaffold_field" class="input-prepend" style="visibility:collapse;">
 		<span class="add-on">フィールド名</span>
-		<input class="scaffold_fieldname span2" type="text" placeholder="field">
-		<select class="scaffold_fieldname_type" style="margin:0 15px;">
+		<input class="scaffold_fieldname input-small" type="text" placeholder="field">
+		<select class="scaffold_fieldname_type" style="margin:0 10px;">
 			<option value="string">string - 文字列</option>
 			<option value="text">text - 長い文字列</option>
 			<option value="integer">integer - 整数</option>
@@ -330,8 +326,8 @@
 
 	<div id="migration_field" class="input-prepend" style="visibility:collapse;">
 		<span class="add-on">フィールド名</span>
-		<input class="migration_fieldname span2" type="text" placeholder="field">
-		<select class="migration_fieldname_type" style="margin:0 15px;">
+		<input class="migration_fieldname input-small" type="text" placeholder="field">
+		<select class="migration_fieldname_type" style="margin:0 10px;">
 			<option value="string">string - 文字列</option>
 			<option value="text">text - 長い文字列</option>
 			<option value="integer">integer - 整数</option>
